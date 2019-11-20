@@ -1,0 +1,38 @@
+<head>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+		<title>Graph Animation</title>
+</head>
+<body>
+    <div class='container' style="margin-top: 3%;">
+            <div id="cy">
+                    <!-- <div style="text-align: center;"><span >Loading..</span></div> -->
+                </div>
+                <div class="controller container" >
+                    <input type="text"  name="numVert" id="numVert" onchange='generateAdjList(this.value)'>
+                    <select name="algorithmUsed" id="algorithmUsed" class="btn-primary">
+                        <option value="BFS">Breadth First Search</option>
+                        <option value="DFS">Depth First Search</option>
+                        <option value="MST">Min Spanning Tree</option>
+                    </select>
+                    <label for="startIndex">Start vertex</label>
+                    <input type="text" name="startIndex" id="startIndex">
+
+                    <button id='submit' class="btn btn-primary" onclick="runAlgo()">Run Algo</button>
+                    
+                    <table class="matrix">
+                    </table>
+                    <div class="adjList">
+                    </div>
+                </div>
+    </div>
+
+<!-- <script type="text/javascript" src="dat.gui.min.js"></script> -->
+
+<script src='cytoscape.min.js'></script>
+<script src='index.js'></script>
+</body>
