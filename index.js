@@ -8,26 +8,26 @@
     elements: { // list of graph elements to start with
 
       nodes: [
-        {data: { id: 'a' ,text:"a" }},
-        {data: { id: 'b' ,text:"b" }},
-        {data: { id: 'c' ,text:"c" }},
-        {data: { id: 'd' ,text:"d" }},
-        {data: { id: 'e' ,text:"e"}},
-        {data: { id: 'f' ,text:"f"}},
-        {data: { id: 'g' ,text:"g"}},
+        {data: { id: '0' ,text:"n0" }}, // a
+        {data: { id: '1' ,text:"n1" }}, // b
+        {data: { id: '2' ,text:"n2" }}, // c
+        {data: { id: '3' ,text:"n3" }}, // d
+        {data: { id: '4' ,text:"n4"}}, // e
+        {data: { id: '5' ,text:"n5"}}, // f
+        {data: { id: '6' ,text:"n6"}}, // g
       ],
       edges: [
-        {data: { id: 'ab', source: 'a', target: 'b' }},
+        {data: { id: '01', source: '0', target: '1' , weight: 10}},
 
-        {data: { id: 'ac', source: 'a', target: 'c' }},
+        {data: { id: '02', source: '0', target: '2' ,weight: 20} },
 
-        {data: { id: 'bd', source: 'b', target: 'd' }},
+        {data: { id: '13', source: '1', target: '3' ,weight: 20}},
 
-        {data: { id: 'be', source: 'b', target: 'e' }},
+        {data: { id: '14', source: '1', target: '4' ,weight: 20}},
 
-        {data: { id: 'cf', source: 'c', target: 'f' }},
+        {data: { id: '25', source: '2', target: '5' ,weight: 20}},
 
-        {data: { id: 'cg', source: 'c', target: 'g' }},
+        {data: { id: '26', source: '2', target: '6' ,weight: 20}},
       ] 
     },
   
@@ -63,7 +63,9 @@
           'line-color': '#ccc',
           'target-arrow-color': '#ccc',
           'target-arrow-shape': 'triangle',
-          'curve-style': 'bezier'
+          'curve-style': 'bezier',
+          'label': 'data(weight)',
+          'font-size': '10px',
           // "curve-style": "haystack",
 
         }
@@ -107,6 +109,7 @@
 
   function runAlgo(){
     const algo  = document.querySelector("#algorithmUsed").value;
+    cy.elements().removeClass('highlighted')
     if(algo === "BFS"){
       doBFS();
     }
@@ -122,11 +125,12 @@
   }
 
   function doBFS(){
-    let startVertex = "#a";
+    let startVertex = "#0";
     if (document.getElementById("startIndex").value != ""){
       startVertex =  "#"+document.getElementById("startIndex").value;
     }
     var bfs = cy.elements().bfs(startVertex, function () { }, true);
+    // console.log(bfs);
 
     var i = 0;
       var highlightNextEle = function () {
@@ -142,7 +146,7 @@
   }
   
   function doDFS(){
-    let startVertex = "#a";
+    let startVertex = "#0";
     if (document.getElementById("startIndex").value != ""){
       startVertex =  "#"+document.getElementById("startIndex").value;
     }
@@ -162,16 +166,17 @@
   }
   
   function doMST(){
-    let startVertex = "#a";
+    let startVertex = "#0";
     if (document.getElementById("startIndex").value != ""){
       startVertex =  "#"+document.getElementById("startIndex").value;
     }
-    var mst = cy.elements().kruskal(startVertex, function () { }, true);
+    var mst = cy.elements().kruskal();
+    console.log(mst);
 
     var i = 0;
       var highlightNextEle = function () {
-        if (i < mst.path.length) {
-          mst.path[i].addClass('highlighted');
+        if (i < mst.length) {
+          mst[i].addClass('highlighted');
     
           i++;
           setTimeout(highlightNextEle, 500);
@@ -199,8 +204,62 @@
     table.innerHTML = htmlToInject;
   }
 
+  function genFromEdgeList(){
+    cy.elements().remove()
+    const N = document.querySelector('#numVert').value
+    const adjListElement = document.querySelector('div.adjList').querySelector('.list');
+
+    // Adding Nodes first
+    var nodes = [];
+    for(var i =0;i<N;i++){
+      nodes.push({ group: 'nodes', data: { id: 'n'+i, text: "n"+i } })
+    }
+    cy.add(nodes)
+
+
+    // Now add edges
+    let edges =  [];
+
+    adjListElement.querySelectorAll('div.edgeInList').forEach(edge => {
+      let edgeFrom = edge.querySelector('#edge_src').value;
+      let edgeTo = edge.querySelector('#edge_to').value;
+      let edgeWeight = edge.querySelector('#edge_w').value;
+
+      // edgeFrom = (edgeFrom == "") ? 
+      edges.push({ group: 'edges', data: { id: `${edgeFrom}${edgeTo}`, source: `n${edgeFrom}`, target: `n${edgeTo}`,position: {x: 100,y:100}, weight : edgeWeight } })
+    })
+
+    console.log(edges);
+    cy.add(edges)
+
+    cy.layout({name:'cose'}).run()
+  }
+
+  function addEdgeinList(N){
+    if (N < 0){
+      return;
+    }
+    const adjListElement = document.querySelector('div.adjList').querySelector('.list');
+    var htmlToInject = '';
+    htmlToInject += `
+    <input type="text" name="edge_src" id="edge_src" placeholder="From">
+    <input type="text" name="edge_to" id="edge_to" placeholder="To">
+    <input type="text" name="edge_w" id="edge_w" placeholder="Weight">
+    <button class="btn btn-danger btn-small"><i class="fa fa-times"></i></button>
+    `
+
+    var divToInject = document.createElement('div')
+    divToInject.classList.add('edgeInList')
+    divToInject.innerHTML = htmlToInject;
+
+
+    adjListElement.appendChild(divToInject);
+  }
 
   function generateAdjList(N){
+    if (N < 0){
+      return;
+    }
     const adjListElement = document.querySelector('div.adjList');
     let htmlToInject = '';
     for(let i=0;i<N;i++){
@@ -208,7 +267,7 @@
       <label for="vert_${i}">Vertex ${i}</label>
       <input type="text" name="vert_${i}" id="vert_${i}"><br>`;
     }
-    htmlToInject += `<button id='submit' onclick="loadfromAdjList(${N})">Generate Graph</button>
+    htmlToInject += `<button class='btn btn-primary' id='submit' onclick="loadfromAdjList(${N})">Generate Graph</button>
     `;
     adjListElement.innerHTML = htmlToInject;
   }
@@ -237,7 +296,7 @@
           return;
         }
         console.log(`Create edge from ${edgeFrom} to ${edgeTo}`)
-        edges.push({ group: 'edges', data: { id: `${edgeFrom}${edgeTo}`, source: `n${edgeFrom}`, target: `n${edgeTo}` } })
+        edges.push({ group: 'edges', data: { id: `${edgeFrom}${edgeTo}`, source: `n${edgeFrom}`, target: `n${edgeTo}`,position: {x: 100,y:100} } })
       })
     });
 
@@ -250,8 +309,7 @@
     //   padding: 10,
     // })
 
-
-    cy.resize()
+    cy.layout({name:'cose'}).run()
     // replace eles
 
 
