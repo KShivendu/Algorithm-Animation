@@ -27,6 +27,8 @@
             <div class="col m7 s12">
                     <div id="cy" class="card">
                         </div>
+                        <div id="status" class="red-text">
+                        </div>
             </div>
             <div class="col m5 s12">
                     <div class="controller">
@@ -40,34 +42,44 @@
                                                         <option value="DFS">Depth First Search</option>
                                                         <option value="MST">Min Spanning Tree</option>
                                                     </select>
-                                                    <label>Materialize Select</label>
                                                     </div>
 
-                                                    <div class="input-field col s12">
+                                                    <div class="input-field col m7 s12">
                                                             <input type="text" name="startIndex" id="startIndex" placeholder="Start from 0 (Default)">
                                                     </div>
 
-                                                    <div class="input-field col s12">
-                                                            <button id='submit' class="btn waves-effect waves-light " onclick="runAlgorithm()">Run Algorithm</button>
+                                                    <div class="input-field col m5 s12">
+                                                            <a id='submit' class="btn waves-effect waves-light " onclick="runAlgorithm()">Run Algo</a>
                                                     </div>
                                             </div>
                             </div>
-
+                              
                             <div class="card">
                                 <h5>New Graph</h5>
-                                <div class="panel-body">
-                                        <input type="number"  name="numVert" placeholder="Number of vertices" id="numVert"> 
+                                <div class='row'>
+
+                                        <div class="input-field col m7 s12">
+                                                <input type="number"  name="numVert" placeholder="# Vertices (Default - 3)" min=0 id="numVert"> 
+                                        </div>
+
+                                        <div class="input-field col m5 s6">
+                                                <button class="waves-effect waves-light btn" onclick="addEdgeinList()">Add Edge</button>
+                                        </div>
 
                                         
                                         <div class="adjList">
                                                 
-                                            <button class="btn btn-primary" onclick="addEdgeinList()">Add Edge</button>
-                                            <div class='list'>
+                                            <div class='list col s12'>
                                                 
                                             </div>
-                                            <input type="button" class="btn btn-primary" style="margin: 5px auto;" value='Generate Graph' onclick="genFromEdgeList()">
+
+                                            <div class="col s7">
+                                                    <a class="waves-effect waves-light btn" onclick="genFromEdgeList()">Generate Graph</a>
+
+                                            </div>
                                         </div>
                                 </div>
+
                             </div>
                             
                         </div>
@@ -79,7 +91,5 @@
 <script src='index.js'></script>
 <script>
     M.AutoInit();
-
-
 </script>
 </body>
