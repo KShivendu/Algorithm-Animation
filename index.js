@@ -100,7 +100,7 @@ function runAlgorithm() {
   cy.elements().removeClass("highlighted");
   
   
-  let startVertex = (document.getElementById("startIndex").value !== "") ? document.getElementById("startIndex").value : "#0";
+  let startVertex = (document.getElementById("startIndex").value !== "") ? document.getElementById("startIndex").value : "0";
 
   console.log("Starting vertex is: ", startVertex)
 
@@ -119,7 +119,6 @@ function runAlgorithm() {
 function doBFS(startVertex) {
   console.log(startVertex)
   var bfs = cy.elements().bfs("#"+startVertex, function() {}, true);
-
   animateFromObject(bfs);
 }
 
@@ -129,7 +128,9 @@ function doDFS(startVertex) {
 }
 
 function doMST() {
-  animateFromArray(kruskal(cy.nodes().length, cy.edges()));
+  let mst = kruskal(cy.nodes().length, cy.edges())
+  console.log(mst)
+  animateFromArray(mst);
 }
 
 
@@ -259,7 +260,7 @@ const kruskal = (vertexCount, edges) => {
     disjointSet.union(edge.source, edge.target);
 
     sequence.push(`${edge.source}`);
-    sequence.push(`${edge.source}${edge.target}`);
+    sequence.push(`${edge.source}->${edge.target}`);
     sequence.push(`${edge.target}`);
 
     count++;
@@ -293,16 +294,3 @@ function animateFromObject(arr,i = 0){
 // window.onerror = (e) => {
 //   document.getElementById("status").innerText = e;
 // }
-
-
-// var i = 0;
-// var highlightNextEle = function () {
-//   if (i < bfs.path.length) {
-//     bfs.path[i].addClass('highlighted');
-
-//     i++;
-//     setTimeout(highlightNextEle, 500);
-//   }
-// };
-
-// highlightNextEle();
